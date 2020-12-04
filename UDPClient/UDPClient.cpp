@@ -1,16 +1,13 @@
 #include "UDPClient.h"
 
 UDPClient::UDPClient(boost::asio::ip::udp::endpoint server_ep, unsigned short port_client)
-:socket_(service_,boost::asio::ip::udp::endpoint{boost::asio::ip::udp::v4(),
-		 													 port_client
-															}),
+:socket_(service_,boost::asio::ip::udp::endpoint{boost::asio::ip::udp::v4(),port_client}),
 server_ep_(server_ep)
 { }
 
 void UDPClient::send_file_to_server(unsigned char *file, size_t size, unsigned char *file_id)
 {
 	check_sum_file_ = crc32c(0, file, size);
-//	std::cout << check_sum_file_ << std::endl;
 	formation_packages(file, size, file_id);
 	send_packages();
 	set_answer_from_server();
@@ -56,7 +53,6 @@ void UDPClient::formation_packages(unsigned char *file, size_t size, unsigned ch
 		offset = (ptr - file + size_data_package_ <= size) ? size_data_package_ : size - (ptr - file);
 		packages_.push_back(Package(i, seq_total, uint8_t(TypePackage::PUT), file_id, ptr, offset));
 		ptr = ptr + offset;
-//		std::cout << offset << std::endl;
 	}
 }
 
@@ -74,7 +70,6 @@ void UDPClient::send_packages()
 	for (int i = 0; i < packages_.back().seq_total_; i++)
 	{
 		socket_.send_to(boost::asio::buffer(&packages_[i], sizeof(packages_[i])), server_ep_);
-//		std::cout << strlen((const char*)packages_[i].data_) << std::endl;
 //		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		size_recv = socket_.receive_from(boost::asio::buffer(&recv_pack, sizeof(recv_pack)), server_ep_);
 		if (size_recv != sizeof(recv_pack))

@@ -1,7 +1,3 @@
-//
-// Created by Григорий Воронов on 04.12.2020.
-//
-
 #ifndef UDPCLIENT_PACKAGE_H
 #define UDPCLIENT_PACKAGE_H
 

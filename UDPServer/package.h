@@ -19,4 +19,4 @@ struct Package
 	unsigned char id_[8]; // 8 байт - идентификатор, отличающий один файл от другого
 	unsigned char data_[1'455]; // после заголовка и до конца UDP пакета идут данные
 };
-#endif //UDPSERVER_PACKAGE_H
+#endif
